@@ -4,11 +4,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.kunalsingh.dtuattendance.R;
+import com.example.kunalsingh.dtuattendance.activities.StudentActivity;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -25,25 +28,32 @@ import java.util.ArrayList;
 public class PieChartFragment extends Fragment {
 
     PieChart pieChart;
+    TextView tvTotal , tvPresent;
     public PieChartFragment() {
     }
+
+    public static final String TAG = "PieChartFragment";
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.pie_chart_fragment,container,false);
-
+        tvTotal = (TextView)view.findViewById(R.id.tv_total_number);
+        tvPresent = (TextView)view.findViewById(R.id.tv_present_number);
          pieChart = (PieChart)view.findViewById(R.id.pie_chart);
         pieChart.setRotationEnabled(true);
         pieChart.setHoleRadius(0);
-        addDataSet(50,35);
+        Log.d(TAG,"i "+StudentActivity.getInt());
+        tvTotal.setText(String.valueOf(StudentActivity.getTotal(StudentActivity.getInt())));
+        tvPresent.setText(String.valueOf(StudentActivity.getPresent(StudentActivity.getInt())));
+        addDataSet(StudentActivity.getTotal(StudentActivity.getInt()),StudentActivity.getPresent(StudentActivity.getInt()));
         return view;
     }
 
     public void addDataSet(int total , int present){
 
-
+        Log.d(TAG,"total : "+total+" "+"present :"+present);
         int per;
         per=(int)((float)present/total*100);
 
