@@ -33,5 +33,13 @@ public class TeacherActivity extends AppCompatActivity {
             }
         });
 
+        viewTimetable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TeacherActivity.this,ViewTimeTableActivity.class);
+                startActivity(i);
+            }
+        });
+
     }
 }
