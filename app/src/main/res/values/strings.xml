@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">DtuAttendance</string>
+    <string name="hint_username">Username</string>
+    <string name="register">Register</string>
+    <string name="hint_weight">Weight</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="logout">Logout</string>
+    <string name="hint_name">Full Name</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_register">REGISTER</string>
+    <string name="btn_link_to_register">Not a member? Sign up now.</string>
+    <string name="btn_link_to_login">Already registred! Sign in.</string>
+    <string name="hint_password">Password</string>
+    <string name="login_as_parent">Login as Parent</string>
+    <string name="login_as_admin">Login as Admin</string>
+    <string name="login_as_teacher">Login as Teacher</string>
+    <string name="login_as_student">Login as Student</string>
+
 </resources>
