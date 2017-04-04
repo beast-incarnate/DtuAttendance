@@ -22,5 +22,6 @@
     <color name="green_300">#81C784</color>
     <color name="input_login">#222222</color>
     <color name="input_login_hint">#999999</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>

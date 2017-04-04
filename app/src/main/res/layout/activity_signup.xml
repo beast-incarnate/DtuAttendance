@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_gravity="center"
     android:background="@color/dark_blue_400"
     android:gravity="center"
     android:orientation="vertical">
+
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="60dp"
-
         android:src="@mipmap/ic_launcher" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,20 +20,23 @@
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp">
+
         <EditText
-            android:id="@+id/phoneNumber"
+            android:id="@+id/Username"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:background="@drawable/round_white"
             android:hint="@string/hint_username"
+            android:inputType="text"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login_hint" />
+            android:textColor="@color/dark_blue_dark"
+            android:textColorHint="@color/grey" />
+
 
         <EditText
-            android:id="@+id/pin"
+            android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -40,33 +45,51 @@
             android:inputType="textPassword"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="@color/input_login"
-            android:textColorHint="@color/input_login_hint" />
+            android:textColor="@color/dark_blue_dark"
+            android:textColorHint="@color/grey" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
 
         <!-- Login Button -->
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/verifyButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="@drawable/round_white"
-            android:text="@string/btn_login"
-            android:textColor="@color/dark_blue_400" />
+            android:text="@string/register"
+            android:textColor="@color/dark_blue_400"
+            android:textSize="16sp" />
+
 
         <!-- Link to Login Screen -->
 
         <Button
-            android:id="@+id/btnLinkToRegisterScreen"
+            android:id="@+id/btnLinkToLoginScreen"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"
             android:background="@drawable/round_white"
-            android:text="@string/btn_link_to_register"
+            android:text="@string/btn_link_to_login"
             android:textAllCaps="false"
             android:textColor="@color/dark_blue_400"
             android:textSize="15dp" />
-
     </LinearLayout>
 
 </LinearLayout>

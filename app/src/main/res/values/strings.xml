@@ -16,5 +16,9 @@
     <string name="login_as_admin">Login as Admin</string>
     <string name="login_as_teacher">Login as Teacher</string>
     <string name="login_as_student">Login as Student</string>
+    <string name="signup_error_message">Sorry! Some error occurred.</string>
+    <string name="signup_error_title">Error</string>
+    <string name="login_error_message">An Error Occurred!</string>
+    <string name="login_error_title">Error</string>
 
 </resources>

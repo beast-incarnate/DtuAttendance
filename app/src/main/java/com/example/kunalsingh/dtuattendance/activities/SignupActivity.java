@@ -1,5 +1,9 @@
 package com.example.kunalsingh.dtuattendance.activities;
 
+/**
+ * Created by mayank on 4/4/17.
+ */
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -10,7 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kunalsingh.dtuattendance.R;
@@ -20,48 +24,32 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-/**
- * Created by mayank on 16/2/17.
- */
-
-public class LoginActivity extends Activity{
-
-    public static final String TAG = LoginActivity.class.getSimpleName();
-    public TextView mSignUpTextView;
-    Button loginButton;
-    String loginType;
-    EditText mPhoneNumber;
+public class SignupActivity extends Activity {
+    EditText mUserName;
     EditText mPassword;
-    EditText mPin;
-    Button mLoginButton;
-    String username, password;
+    Button mAlreadyRegistedButton;
+    Button mSignupButton;
+    String TAG = SignupActivity.class.getSimpleName();
+    String username;
+    String password;
+    ProgressBar mProgressBar;
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.activity_signup);
+        mUserName = (EditText) findViewById(R.id.Username);
+        mPassword = (EditText) findViewById(R.id.password);
+        mAlreadyRegistedButton = (Button) findViewById(R.id.btnLinkToLoginScreen);
+        mSignupButton = (Button) findViewById(R.id.verifyButton);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
 
-        mSignUpTextView = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
-
-        mSignUpTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(LoginActivity.this, SignupActivity.class);
-                startActivity(i);
-            }
-        });
-
-        //mUserName = (EditText) findViewById(R.id.name);
-        mPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
-        mPassword = (EditText) findViewById(R.id.password);
-        mLoginButton = (Button) findViewById(R.id.btnLogin);
-        mPin = (EditText) findViewById(R.id.pin);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -71,84 +59,88 @@ public class LoginActivity extends Activity{
                     // User is signed in
                     Log.d("FireAuth", "onAuthStateChanged:signed_in:" + user.getUid());
 
-                    Log.d(TAG, "Already logged in.");
-
+                    Log.d(TAG, "Already Logged in: " + user.getEmail());
 
                 } else {
                     // User is signed out
                     Log.d("FireAuth", "onAuthStateChanged:signed_out");
                 }
-
             }
         };
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
+        mAlreadyRegistedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = mPhoneNumber.getText().toString();
-                password = mPin.getText().toString();
-                getSharedPreferences("LOGIN", MODE_PRIVATE).edit().putString("username", username).apply();
-                username = username.trim();
-                password = password.trim();
-
-                if (username.isEmpty() || password.isEmpty()) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.login_error_message);
-                    builder.setTitle(R.string.login_error_title);
-                    builder.setPositiveButton(android.R.string.ok, null);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
-                } else {
-                    doLogin();
-                }
+                Intent i = new Intent(SignupActivity.this, LoginActivity.class);
+                startActivity(i);
             }
         });
 
-
+        mSignupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                username = mUserName.getText().toString();
+                password = mPassword.getText().toString();
+                username = username.trim();
+                password = password.trim();
+                if (username.isEmpty() || password.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
+                    builder.setMessage(R.string.signup_error_message);
+                    builder.setTitle(R.string.signup_error_title);
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } else {
+                    showProgressDialog();
+                    startRegistration();
+                }
+            }
+        });
     }
 
-    public void doLogin() {
+    private void showProgressDialog() {
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+    }
 
-        mAuth.signInWithEmailAndPassword(username, password)
+    private void hideProgressDialog() {
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+    }
+
+    private void startRegistration() {
+        setProgressBarIndeterminateVisibility(true);
+        Log.d(TAG, "Username : " + username);
+        Log.d(TAG, "Full Name : " + username);
+        Log.d(TAG, "Password : " + password);
+        showProgressDialog();
+
+        mAuth.createUserWithEmailAndPassword(username, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("FireAuth", "signInWithEmail:onComplete:" + task.isSuccessful());
+                        Log.d("Auth", "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Log.w("FireAuth", "signInWithEmail", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(SignupActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.d(TAG, "Login successful.");
-                            Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(i);
-                        }
 
+                            hideProgressDialog();
+                            setProgressBarIndeterminateVisibility(false);
+
+                            Intent i = new Intent(SignupActivity.this, MainActivity.class);
+                            startActivity(i);
+
+                            Log.d(TAG, "Signup Successful!");
+                        }
                     }
                 });
-    }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
 
 
 }
+
+
