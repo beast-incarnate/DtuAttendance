@@ -7,17 +7,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.kunalsingh.dtuattendance.R;
+import com.example.kunalsingh.dtuattendance.fragments.AskDetailsFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -54,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        AskDetailsFragment fragment = new AskDetailsFragment();
+
+        transaction.add(R.id.fl_container,fragment);
+        transaction.commit();
     }
 
     private void requestForSpecificPermission() {

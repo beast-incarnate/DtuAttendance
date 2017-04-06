@@ -44,14 +44,13 @@ public class PieChartFragment extends Fragment {
          pieChart = (PieChart)view.findViewById(R.id.pie_chart);
         pieChart.setRotationEnabled(true);
         pieChart.setHoleRadius(0);
-        Log.d(TAG,"i "+StudentActivity.getInt());
-        tvTotal.setText(String.valueOf(StudentActivity.getTotal(StudentActivity.getInt())));
-        tvPresent.setText(String.valueOf(StudentActivity.getPresent(StudentActivity.getInt())));
-        addDataSet(StudentActivity.getTotal(StudentActivity.getInt()),StudentActivity.getPresent(StudentActivity.getInt()));
+        tvTotal.setText(String.valueOf(StudentActivity.getTotal()));
+        tvPresent.setText(String.valueOf(StudentActivity.getPresent()));
+        addDataSet(StudentActivity.getTotal(),StudentActivity.getPresent());
         return view;
     }
 
-    public void addDataSet(int total , int present){
+    public void addDataSet(long total , long present){
 
         Log.d(TAG,"total : "+total+" "+"present :"+present);
         int per;

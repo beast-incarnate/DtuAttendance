@@ -1,5 +1,7 @@
 package com.example.kunalsingh.dtuattendance.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,7 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.example.kunalsingh.dtuattendance.R;
 import com.example.kunalsingh.dtuattendance.fragments.PieChartFragment;
@@ -20,72 +25,100 @@ import java.util.ArrayList;
 
 public class StudentActivity extends AppCompatActivity {
 
-    Button btn [] = new Button[8];
     public static final String TAG = "StudentActivity";
-    static int i2;
-    static ArrayList<Integer> total = new ArrayList<>();
-    static ArrayList<Integer> present = new ArrayList<>();
+
+    private static int tmp;
+    static long[] total;
+    static long[] present;
+
+    RelativeLayout relativeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student);
 
-        for(int i=0;i<8;i++)
-            total.add((i+1)*10);
+        Intent intent = getIntent();
 
-        for(int i=0;i<8;i++)
-            present.add(i*10);
+        ArrayList<CharSequence> subjects = intent.getCharSequenceArrayListExtra("subjects");
+        total = intent.getLongArrayExtra("total");
+        present = intent.getLongArrayExtra("present");
+        for(int j=0;j<subjects.size();j++)
+        Log.d(TAG,"ss"+total[j]+" "+present[j]);
 
-        assignButtons();
+        int size = subjects.size();
+
+        relativeLayout = (RelativeLayout) findViewById(R.id.rl_student_activity);
+
+        RelativeLayout.LayoutParams params[] = new RelativeLayout.LayoutParams[size];
+
+        final Button btn[] = new Button[size];
+
+        // adding buttons dynamically
 
 
-        for(int i=0;i<8;i++){
+        for (int i = 0; i < size; i++) {
+            btn[i] = new Button(this);
+            btn[i].setId((i + 1) * 4);
+            btn[i].setBackgroundColor(Color.parseColor("#03a9f4"));
+            params[i] = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params[i].setMargins(4, 4, 0, 0);
+
+            if (i % 4 == 0 && i > 0) {
+                //    Log.d(TAG,"came "+" "+i);
+                params[i].addRule(RelativeLayout.BELOW, btn[i - 4].getId());
+
+            } else if (i > 0 && i > 3) {
+                params[i].addRule(RelativeLayout.RIGHT_OF, btn[i - 1].getId());
+                params[i].addRule(RelativeLayout.BELOW, btn[i - 4].getId());
+            } else if (i > 0) {
+                params[i].addRule(RelativeLayout.RIGHT_OF, btn[i - 1].getId());
+            } else {
+                params[i].addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            }
+            if (subjects.get(i).toString().length() <= 5)
+                btn[i].setText(subjects.get(i).toString());
+            else {
+                btn[i].setText(subjects.get(i).toString().substring(0, 3) + "..");
+            }
+
+            btn[i].setTextSize(12);
+
+            btn[i].setLayoutParams(params[i]);
+            relativeLayout.addView(btn[i], params[i]);
+
             final int finalI = i;
             btn[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setInt(finalI);
-                    Log.d(TAG,"cc"+getInt());
-                    final FragmentManager manager = getSupportFragmentManager();
-                    final PieChartFragment pieChartFragment = new PieChartFragment();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.frame_container_piechart,pieChartFragment);
+                    tmp = finalI;
+
+                    PieChartFragment pieChartFragment = new PieChartFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                    transaction.replace(R.id.frame_container_piechart,pieChartFragment,null);
                     transaction.commit();
+
                 }
             });
         }
-
-
-
+        final FrameLayout frameLayout = (FrameLayout) findViewById(R.id.frame_container_piechart);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.BELOW, btn[size-1].getId());
+        frameLayout.setLayoutParams(layoutParams);
+        if (frameLayout.getParent() != null) {
+            ((ViewGroup) frameLayout.getParent()).removeView(frameLayout);
+        }
+        relativeLayout.addView(frameLayout);
     }
 
-
-    public void assignButtons(){
-
-        btn[0] = (Button)findViewById(R.id.btn_one);
-        btn[1] = (Button)findViewById(R.id.btn_two);
-        btn[2] = (Button)findViewById(R.id.btn_three);
-        btn[3] = (Button)findViewById(R.id.btn_four);
-        btn[4] = (Button)findViewById(R.id.btn_five);
-        btn[5] = (Button)findViewById(R.id.btn_six);
-        btn[6] = (Button)findViewById(R.id.btn_seven);
-        btn[7] = (Button)findViewById(R.id.btn_eight);
-
+    public static long getTotal(){
+        return total[tmp];
     }
 
-    public static int getTotal(int i){
-        return total.get(i);
+    public static long getPresent(){
+        return present[tmp];
     }
 
-    public static int getPresent(int i){
-        return present.get(i);
-    }
-
-    public static void setInt(int i){
-        i2 = i;
-    }
-
-    public static int getInt(){
-        return i2;
-    }
 }
